@@ -5,8 +5,6 @@ class DataSplitter:
     def __init__(self, df, target):
         self.df = df.copy()
         self.target = target
-
-
         self.x_train = None 
         self.x_test = None
         self.y_train = None
