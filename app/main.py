@@ -9,7 +9,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-model = joblib.load("Models/xgboost_model.pkl")
+model = joblib.load(r"C:\Users\Rasulbekk\Desktop\Employee_Attrition_Project\Models\xgboost_model.pkl")
 
 
 class Employee(BaseModel):
