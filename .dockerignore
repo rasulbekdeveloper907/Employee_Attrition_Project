@@ -1,0 +1,49 @@
+# Python cache 
+__pycache__/
+*.pyc
+*.pyo 
+*.pyd 
+
+# Virtual ENvironment
+.venv/
+venv/
+env/
+
+# Git 
+.git/
+.gitignore
+
+# VS Code 
+
+.vscode/
+
+# Py Charm
+.idea/
+
+# Jupyter 
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+*.log 
+
+# Environment
+
+.env 
+
+# Testing 
+.pytest_cache/
+
+#OS files
+
+.DS_Store
+Thumbs.db
+
+# Documentation
+
+README.md
+
+#  Docker 
+
+docker-compose.yml
+
