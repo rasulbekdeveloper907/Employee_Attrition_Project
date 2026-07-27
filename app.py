@@ -2,6 +2,136 @@ import gradio as gr
 
 
 
+def square(x):
+
+    return x*x
+
+demo = gr.Interface(
+    fn=square,
+    inputs=gr.Number(
+        label="Enter Number"
+    ),
+
+    outputs=gr.Number(
+        label="Square"
+    )
+    
+)
+
+demo.launch()
+
+
+
+
+
+
+
+
+
+
+
+
+# def statistics(x):
+#     return (
+#         x,
+#         x+10,
+#         x*2,
+#         x/2
+#     )
+
+# demo = gr.Interface(
+#     fn = statistics,
+
+#     inputs= "number",
+
+#     outputs=[
+#         "number",
+#         "number",
+#         "number",
+#         "number"
+
+#     ]
+# )
+
+
+# demo.launch()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def calculate(x):
+#     return (
+#         x,
+#         x**2,
+#         x**3,
+#         x**4
+#     )
+
+# demo = gr.Interface(
+#     fn = calculate,
+
+#     inputs= "number",
+
+#     outputs=[
+#         "number",
+#         "number",
+#         "number",
+#         "number"
+
+#     ]
+# )
+
+
+# demo.launch()
+
+
+
+
+
+
+
+
+
+
+# outputs = "text"
+
+
+# outputs = "number"
+
+
+
+# outputs = "json"
+
+
+
+# outputs = "image"
+
+
+
+# outputs = "gallery"
+
+
+
+# outputs = "dataframe"
+
+
+
+# outputs = "plot"
+
 
 
 
