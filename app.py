@@ -4,6 +4,430 @@ import gradio as gr
 
 
 
+# def theme(flag):
+
+#     return "Dark" if flag else "Light"
+    
+
+# demo= gr.Interface(
+
+#     fn = theme,
+
+#     inputs = gr.Checkbox(
+
+#         label="Dark Mode"
+#     ),
+
+
+#     outputs="text"
+# )
+
+# demo.launch()
+
+
+
+# def gpu(flag):
+
+#     if flag:
+#         return "GPU Enabled"
+
+#     return "CPU Mode"
+
+# demo= gr.Interface(
+
+#     fn = gpu,
+
+#     inputs = gr.Checkbox(
+
+#         label="USE GPU"
+#     ),
+
+
+#     outputs="text"
+# )
+
+# demo.launch()
+
+
+
+
+# gr.Checkbox(
+
+#     value=True
+# )
+
+
+# gr.Checkbox(
+
+#     interactive=True
+# )
+
+
+# gr.Checkbox(
+
+#     value=True,
+#     interactive=False
+# )
+
+
+
+
+# def remember(flag):
+
+#     if flag:
+#         return "Remember Enabled"
+
+#     return "Remember Disabled"
+
+
+
+# demo = gr.Interface(
+
+#     fn = remember,
+
+#     inputs=gr.Checkbox(
+
+#         label="Remember Me"
+#     ),
+
+
+#     outputs='text'
+
+# )
+
+# demo.launch()
+
+
+
+
+
+
+
+
+
+
+
+# def status(x):
+
+#     return x 
+
+
+# demo = gr.Interface(
+
+#     fn = status,
+#     inputs=gr.Checkbox(),
+#     outputs="text"
+
+# )
+
+
+# demo.launch()
+
+
+
+
+
+
+
+
+# def employee(name, age, exp):
+
+#     return f"""
+# Name : {name}
+
+# Age : {age}
+
+
+# Experience : {exp} years
+# """
+
+# demo = gr.Interface(
+
+#     fn = employee,
+
+#     inputs= [
+
+#         gr.Textbox(label="Name"),
+#         gr.Number(label="Age"),
+#         gr.Slider(
+
+#             0, 
+#             40,
+#             value=2,
+
+#             label="Experience"
+#         )
+#     ],
+
+
+#     outputs=gr.Textbox(
+
+#         label="Employee Information: "
+#     ),
+
+#     title="Employee Information System"
+# )
+
+# demo.launch()
+
+
+
+# def batch(x):
+
+#     return f"Batch Size:  {x}"
+
+
+# demo = gr.Interface(
+
+#     fn = batch,
+
+#     inputs= gr.Slider(
+
+#         minimum=1,
+
+#         maximum=412,
+
+#         value=32,
+
+#         step= 1       
+
+        
+#     ),
+
+#     outputs="text"
+# )
+
+
+# demo.launch()
+
+
+
+# def epoch(x):
+
+#     return f"Epoch:  {x}"
+
+
+# demo = gr.Interface(
+
+#     fn = epoch,
+
+#     inputs= gr.Slider(
+
+#         minimum=1,
+
+#         maximum=500,
+
+#         value=100,
+
+#         step= 1       
+
+        
+#     ),
+
+#     outputs="text"
+# )
+
+
+# demo.launch()
+
+
+
+
+# def train(lr):
+
+#     return f"Learning Rate :  {lr}"
+
+
+# demo = gr.Interface(
+
+#     fn = train,
+
+#     inputs= gr.Slider(
+
+#         minimum=0.0001,
+
+#         maximum=0.1,
+
+#         step= 0.0001,
+
+#         value=0.001,
+
+#         label="Learning Rate"
+#     ),
+
+#     outputs="text"
+# )
+
+
+# demo.launch()
+
+
+
+
+# def predict(conf):
+
+#     return f"Confidence :  {conf}"
+
+
+# demo = gr.Interface(
+
+#     fn = predict,
+
+#     inputs= gr.Slider(
+
+#         minimum=0,
+
+#         maximum=1,
+
+#         step= 0.01,
+
+#         value=0.50,
+
+#         label="Confidence"
+#     ),
+
+#     outputs="text"
+# )
+
+
+# demo.launch()
+
+
+
+
+# gr.Slider(
+
+#     minimum=0,
+
+#     maximum=100,
+
+#     step= 5
+# )
+
+
+
+# gr.Slider(
+
+#     minimum=0,
+
+#     maximum=100,
+
+#     step= 50
+# )
+
+
+
+# gr.Slider(
+
+#     minimum=0,
+
+#     maximum=10,
+
+#     label= "Epoch"
+# )
+
+
+
+
+
+
+
+# def power(x):
+
+#     return x**2
+
+
+# demo = gr.Interface(
+
+#     fn = power,
+
+#     inputs=gr.Slider(
+
+#         0,
+#         100
+#     ),
+
+#     outputs= "number"
+# )
+
+# demo.launch()
+
+
+
+
+# def annual(month):
+
+#     return month*12
+
+
+# demo = gr.Interface(
+
+#     fn = annual,
+
+#     inputs=gr.Number(
+
+#         label="Monthly Salary"
+#     ),
+
+#     outputs=gr.Number(
+
+#         label="Annual Salary"
+#     )
+
+# )
+
+
+# demo.launch()
+
+
+
+
+# def square(x):
+
+#     return x*x
+
+# demo = gr.Number(
+
+#     label="Age"
+# )
+
+# demo.launch()
+
+
+# demo = gr.Number(
+
+#     value=25
+# )
+
+# demo.launch()
+
+
+# demo = gr.Number(
+
+#     precision=2
+# )
+
+# demo.launch()
+
+
+# demo = gr.Number(
+
+#     interactive=True
+# )
+
+
+# demo.launch()
+
+
+# demo = gr.Number(
+
+#     interactive=False,
+#     value=100
+# )
+
+# demo.launch()
+
+
 # def word(text):
 
 #     return len(text.split())
