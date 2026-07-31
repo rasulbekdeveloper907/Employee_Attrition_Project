@@ -1,6 +1,402 @@
 import gradio as gr 
 
 
+def size(img):
+
+    return str(img.shape)
+
+
+demo = gr.Interface(
+
+    fn = size,
+
+    inputs=gr.Image(),
+
+    outputs="text"
+)
+
+
+demo.launch()
+
+
+
+
+
+
+
+
+
+
+# gr.Image(
+
+#     label="Upload Image"
+# )
+
+
+# gr.Image(
+#     height=400
+# )
+
+# gr.Image(
+
+#     widht=500
+# )
+
+
+# gr.Image(
+#     type="numpy"
+# )
+
+# gr.Image(
+
+#     type="pil"
+# )
+
+
+# gr.Image(
+#     type="filepath"
+# )
+
+
+# gr.Image(
+#     format="png"
+# )
+
+# gr.Image(
+#     sources=["upload"]
+# )
+
+
+# gr.Image(
+#     sources=[
+#         "upload",
+#         "webcam"
+#     ]
+# )
+
+
+
+
+
+# def show(image):
+#     return image
+
+# demo = gr.Interface(
+#     fn = show,
+
+#     inputs=gr.Image(),
+
+#     outputs=gr.Image()
+
+# )
+
+# demo.launch
+
+
+
+
+
+
+
+
+
+
+
+
+# def employee(name, gender, department, skills, remote):
+
+#     return f"""
+# Name: {name}
+
+
+# Gender:  {gender}
+
+# Department: {department}
+
+
+# Skills: {", ".join(skills)}
+
+# Remote Work: {"Yes" if remote else "No"}
+# """
+
+# demo = gr.Interface(
+
+#     fn= employee,
+
+#     inputs=[
+#         gr.Textbox(label="Name"),
+
+#         gr.Radio(
+#             ["Male", "Female"],
+
+#             label="Gender"
+#         ),
+
+#         gr.Dropdown(
+#             [
+#                 "Ai",
+
+#                 "Backend",
+
+#                 "Frontend",
+
+#                 "Data Scinece"
+#             ],
+#             label="Department"
+#         ),
+
+#         gr.CheckboxGroup(
+
+#             [
+#                 "Python",
+
+#                 "SQL",
+
+#                 "Docker",
+
+#                 "GIT"
+#             ],
+#             label="Skills"
+#         ),
+
+#         gr.Checkbox(
+#             label="Remote Work"
+#         )
+#     ],
+
+#     outputs=gr.Textbox(
+#         label="Employee Summary"
+#     ),
+
+#     title="Employee Registration"
+# )
+
+
+# demo.launch()
+
+
+
+
+
+
+
+
+
+
+# def coursera(x):
+
+#     return f"You selected {len(x)} course(s)."
+
+# demo=gr.Interface(
+#     fn = coursera,
+
+#     inputs=gr.CheckboxGroup(
+#         [
+#             "ML",
+#             "DL",
+#             "CV",
+#             "NLP"
+#         ]
+#     ),
+
+#     outputs="text"
+
+# )
+
+# demo.launch()
+
+
+
+
+
+# def skills(x):
+
+#     return x
+
+# demo = gr.Interface(
+
+#     fn = skills,
+
+#     inputs=gr.CheckboxGroup(
+#         [
+#             "Python",
+#             "SQL",
+#             "FastAPI",
+#             "Docker",
+#             "Git"
+#         ]
+#     ),
+
+#     outputs="text"
+# )
+
+# demo.launch()
+
+
+
+
+
+
+# def country(x):
+
+#     return f"Country: {x}"
+
+
+# demo = gr.Interface(
+#     fn = country,
+
+#     inputs=gr.Dropdown(
+
+#         [
+#             "UZB",
+#             "GRB",
+#             "USA",
+#             "KOR"
+#         ]
+#     ),
+
+
+#     outputs="text"
+# )
+
+# demo.launch()
+
+
+
+# gr.Dropdown(
+#     [
+#         "Python",
+#         "Java",
+#         "C++"
+#     ],
+
+#     value="Python"
+# )
+
+
+
+
+
+# def city(x):
+
+#     return x 
+
+
+# demo = gr.Interface(
+#     fn = city,
+
+#     inputs=gr.Dropdown(
+
+#         [
+#             "Khiva",
+#             "Buhoro",
+#             "Samarqand",
+#             "Toshkent"
+#         ]
+#     ),
+
+
+#     outputs="text"
+# )
+
+# demo.launch()
+
+
+
+
+
+
+
+
+
+
+
+# def optimizer(opt):
+
+#     return f"Optimizer {opt}" 
+
+# demo = gr.Interface(
+
+#     fn = optimizer,
+
+#     inputs = gr.Radio(
+#         [
+#             "Adam",
+
+#             "SGD",
+
+#             "RMSProp"
+            
+#         ],
+
+#         label="Optimizer"
+#     ),
+
+#     outputs= "text"
+# )
+
+
+# demo.launch()
+
+
+
+
+
+
+# def language(x):
+
+#     return f"You selected {x}" 
+
+# demo = gr.Interface(
+
+#     fn = language,
+
+#     inputs = gr.Radio(
+#         [
+#             "Python",
+
+#             "Java",
+
+#             "C++",
+
+#             "Go"
+#         ]
+#     ),
+
+#     outputs= "text"
+# )
+
+
+# demo.launch()
+
+
+
+
+
+
+
+
+
+# def gender(x):
+
+#     return x 
+
+# demo = gr.Interface(
+#     fn = gender,
+
+#     inputs = gr.Radio(
+#         [
+#             "Male",
+
+#             "Female"
+#         ]
+#     ),
+
+#     outputs= "text"
+# )
+
+
+# demo.launch()
 
 
 
@@ -326,808 +722,3 @@ import gradio as gr
 #     label= "Epoch"
 # )
 
-
-
-
-
-
-
-# def power(x):
-
-#     return x**2
-
-
-# demo = gr.Interface(
-
-#     fn = power,
-
-#     inputs=gr.Slider(
-
-#         0,
-#         100
-#     ),
-
-#     outputs= "number"
-# )
-
-# demo.launch()
-
-
-
-
-# def annual(month):
-
-#     return month*12
-
-
-# demo = gr.Interface(
-
-#     fn = annual,
-
-#     inputs=gr.Number(
-
-#         label="Monthly Salary"
-#     ),
-
-#     outputs=gr.Number(
-
-#         label="Annual Salary"
-#     )
-
-# )
-
-
-# demo.launch()
-
-
-
-
-# def square(x):
-
-#     return x*x
-
-# demo = gr.Number(
-
-#     label="Age"
-# )
-
-# demo.launch()
-
-
-# demo = gr.Number(
-
-#     value=25
-# )
-
-# demo.launch()
-
-
-# demo = gr.Number(
-
-#     precision=2
-# )
-
-# demo.launch()
-
-
-# demo = gr.Number(
-
-#     interactive=True
-# )
-
-
-# demo.launch()
-
-
-# demo = gr.Number(
-
-#     interactive=False,
-#     value=100
-# )
-
-# demo.launch()
-
-
-# def word(text):
-
-#     return len(text.split())
-
-# demo = gr.Interface(
-
-#     fn=word,
-
-#     inputs="text",
-
-#     outputs="number"
-# )
-
-# demo.launch()
-
-
-
-# def length(text):
-
-#     return len(text)
-
-# demo = gr.Interface(
-#     fn = length,
-#     inputs=gr.Textbox(),
-#     outputs="number"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-# gr.Textbox(
-#     type="password"
-# )
-
-
-
-# gr.Textbox(
-#     interactive=True
-# )
-
-
-
-# gr.Textbox(
-#     interactive=False,
-#     value="Prediction Result"
-# )
-
-
-# gr.Textbox(
-#     scale=2
-# )
-
-
-
-# gr.Textbox(
-#     container=True
-# )
-
-
-
-# gr.Textbox(
-#     info="Enter Your Email"
-# )
-
-
-
-
-# def reverse(text):
-
-#     return text[::-1]
-
-
-# demo = gr.Interface(
-
-#     fn=reverse,
-
-#     inputs=gr.Textbox(
-
-#         lines=3,
-#         max_lines=10
-#     ),
-
-#     outputs="text"
-# )
-
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-# def reverse(text):
-
-#     return text[::-1]
-
-
-# demo = gr.Interface(
-
-#     fn=reverse,
-
-#     inputs=gr.Textbox(
-
-#         lines=5
-#     ),
-
-#     outputs="text"
-# )
-
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-# def hello(name):
-
-#     return name
-
-
-# demo = gr.Interface(
-
-#     fn=hello,
-
-#     inputs=gr.Textbox(
-
-#         value="Rasulbek"
-#     ),
-
-#     outputs= "text"
-# )
-
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-# def upper(text):
-
-#     return text.upper()
-
-
-# demo = gr.Interface(
-
-#     fn=upper,
-
-#     inputs=gr.Textbox(
-
-#         placeholder="Enter Text.... "
-#     ),
-
-#     outputs="text"
-# )
-
-
-# demo.launch()
-
-
-
-
-# def hello(name):
-#     return f"Hello {name}"
-
-
-# demo = gr.Interface(
-
-#     fn=hello,
-
-#     inputs=gr.Textbox(
-#             label="Your Name"
-#     ),
-
-#     outputs=gr.Textbox(
-
-#         label="Greeting"
-
-#     )
-# )
-
-
-# demo.launch()
-
-
-
-
-
-
-
-# def echo(text):
-#     return text 
-
-# demo = gr.Interface(
-#     fn=echo,
-#     inputs=gr.Textbox(),
-#     outputs=gr.Textbox()
-# )
-
-# demo.launch()
-
-
-
-
-
-
-# def greet(name):
-#     return f"Welcome {name}"
-
-
-# demo = gr.Interface(
-#     fn=greet,
-#     inputs=gr.Textbox(
-#         "Your Name"
-#     ),
-
-#     outputs=gr.Textbox(
-#         label="Result"
-#     )
-
-
-
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-
-
-# def square(x):
-
-#     return x*x
-
-# demo = gr.Interface(
-#     fn=square,
-#     inputs=gr.Number(
-#         label="Enter Number"
-#     ),
-
-#     outputs=gr.Number(
-#         label="Square"
-#     )
-    
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-
-
-# def statistics(x):
-#     return (
-#         x,
-#         x+10,
-#         x*2,
-#         x/2
-#     )
-
-# demo = gr.Interface(
-#     fn = statistics,
-
-#     inputs= "number",
-
-#     outputs=[
-#         "number",
-#         "number",
-#         "number",
-#         "number"
-
-#     ]
-# )
-
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def calculate(x):
-#     return (
-#         x,
-#         x**2,
-#         x**3,
-#         x**4
-#     )
-
-# demo = gr.Interface(
-#     fn = calculate,
-
-#     inputs= "number",
-
-#     outputs=[
-#         "number",
-#         "number",
-#         "number",
-#         "number"
-
-#     ]
-# )
-
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-# outputs = "text"
-
-
-# outputs = "number"
-
-
-
-# outputs = "json"
-
-
-
-# outputs = "image"
-
-
-
-# outputs = "gallery"
-
-
-
-# outputs = "dataframe"
-
-
-
-# outputs = "plot"
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def power(x):
-#     return x**2
-
-# demo = gr.Interface(
-#     fn= power,
-#     inputs=gr.Slider(
-#         minimum=0,
-#         maximum=100,
-#         step=1,
-#         value=25
-#     ),
-#     outputs="number"
-# )
-
-
-# demo.launch()
-
-
-
-# def choose(value):
-#     return value
-
-# demo = gr.Interface(
-#     fn= choose,
-#     inputs=gr.Radio(
-#         [
-#             "Male",
-#             "Female"            
-#         ]
-#     ),
-#     outputs="text"
-# )
-
-
-# demo.launch()
-
-
-
-
-# def select(lang):
-#     return lang
-
-# demo = gr.Interface(
-#     fn= select,
-#     inputs=gr.Dropdown(
-#         [
-#             "Python",
-#             "Java",
-#             "C++"
-#         ]
-#     ),
-#     outputs="text"
-# )
-
-
-# demo.launch()
-
-
-    
-
-
-
-
-
-
-# def hello(name):
-#     return name
-
-
-# demo = gr.Interface(
-#     fn =hello,
-#     inputs="text",
-#     outputs="text",
-# )
-
-# demo.launch()
-
-
-
-
-# demo = gr.Interface(
-#     fn =hello,
-#     inputs="number",
-#     outputs="number",
-# )
-
-
-
-
-
-
-
-
-
-# def add(a,b):
-#     return a+b
-
-
-# demo = gr.Interface(
-#     fn=add,
-#     inputs=[
-#         "number",
-#         "number"
-
-#     ],
-
-#     outputs="number"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def bmi(weight, height):
-#     return weight/(height**2)
-
-
-# demo = gr.Interface(
-#     fn=bmi,
-#     inputs=[
-#         "number",
-#         "number"
-
-#     ],
-
-#     outputs="number"
-# )
-
-# demo.launch()
-
-
-
-
-
-# def hello(name):
-#     return f"Hello {name}"
-
-# demo = gr.Interface(
-#     fn = hello,
-#     inputs= "text",
-#     outputs="text"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-# def cube(x):
-#     return x**3
-
-
-# demo = gr.Interface(
-#     fn = cube,
-#     inputs= "number",
-#     outputs="number"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-# def square(x):
-#     return x**2
-
-
-# demo = gr.Interface(
-#     fn = square,
-#     inputs= "number",
-#     outputs="number"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-# def count(text):
-#     return len(text)
-
-# demo = gr.Interface(
-#     fn = count,
-#     inputs= "text",
-#     outputs="number"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-# def reverse(text):
-#     return text[::-1]
-
-# demo = gr.Interface(
-#     fn = reverse,
-#     inputs = "text",
-#     outputs = "text"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-
-
-
-
-
-
-# def lower(text):
-#     return text.lower()
-
-# demo = gr.Interface(
-#     fn = lower,
-#     inputs="text",
-#     outputs="text"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-# def upper(text):
-#     return text.upper()
-
-# demo = gr.Interface(
-#     fn = upper,
-#     inputs="text",
-#     outputs="text"
-# )
-
-# demo.launch()
-
-
-
-
-
-
-# def greet(name):
-#     return "Welcome"  + name 
-
-# app = gr.Interface(
-#     fn=greet,
-#     inputs="text",
-#     outputs="text"
-# )
-
-# app.launch()
-
-
-
-#
-# 
-#  def greet(name):
-#     return f"Hello {name}"
-
-# demo = gr.Interface(
-#     fn=greet,
-#     inputs="text",
-#     outputs="text"
-# )
-
-# demo.launch()
