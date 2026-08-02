@@ -1,22 +1,306 @@
 import gradio as gr 
+import librosa
+import pandas as pd 
+from PIL import Image
 
 
-def size(img):
-
-    return str(img.shape)
 
 
-demo = gr.Interface(
-
-    fn = size,
-
-    inputs=gr.Image(),
-
-    outputs="text"
-)
 
 
-demo.launch()
+
+
+
+# def gallery():
+
+#     return [
+
+#         Image.open("cat1.jpg"),
+#         Image.open("cat2.jpg"),
+#         Image.open("cat3.jpg")
+#     ]
+
+# demo = gr.Interface(
+
+#     fn = gallery,
+
+#     inputs=None,
+
+#     outputs=gr.Gallery()
+# )
+
+# demo.launch()
+
+
+# gr.Gallery(
+#     columns=3
+# )
+
+
+
+# gr.Gallery(
+
+#     height=500
+# )
+
+
+
+# gr.Gallery(
+
+#     preview=True
+# )
+
+
+
+
+
+
+# def read(file):
+
+#     df = pd.read_csv(file.name)
+
+
+#     return df.head()
+
+
+# demo = gr.Interface(
+
+#     fn = read,
+
+#     inputs=gr.File(),
+
+#     outputs=gr.DataFrame()
+# )
+
+
+# demo.launch()
+
+
+
+
+
+
+
+# def upload(file):
+
+#     return file.name
+
+# demo = gr.Interface(
+
+#     fn = upload,
+
+#     inputs=gr.File(),
+
+#     outputs="text"
+# )
+
+# demo.launch()
+
+
+
+
+# gr.File(
+
+#     file_types=[
+
+#         ".csv"
+#     ]
+# )
+
+
+# gr.File(
+
+#     file_types=[
+
+#         ".xlsx"
+#     ]
+# )
+
+
+# gr.File(
+
+#     file_types=[
+#         ".pdf"
+#     ]
+# )
+
+
+# gr.File(
+
+#     file_types=[
+#         ".png",
+
+#         ".jpg",
+
+#         ".jpeg"
+#     ]
+# )
+
+# gr.File(
+
+#     file_count="multiple"
+# )
+
+
+# gr.File(
+
+#     file_count="directory"
+# )
+
+
+
+
+# def path(video):
+
+#     return video
+
+# demo = gr.Interface(
+
+#     fn = path,
+
+#     inputs=gr.Video(),
+
+#     outputs="text"
+# )
+
+# demo.launch()
+
+
+
+
+# def video(video):
+
+#     return video
+
+# demo = gr.Interface(
+
+#     fn = video,
+
+#     inputs= gr.Video(),
+
+#     outputs=gr.Video()
+# )
+
+
+# demo.launch
+
+
+# gr.Video(
+
+#     sources=["upload"]
+# )
+
+
+# gr.Video(
+
+#     sources=["webcam"]
+# )
+
+
+# gr.Video(
+
+#     sources=[
+
+#         "upload",
+
+#         "webcam"
+#     ]
+# )
+
+
+
+
+
+# def duration(audio):
+
+#     y, sr= librosa.load(audio)
+
+#     return librosa.get_duration(y=y, sr=sr)
+
+# demo = gr.Interface(
+#     fn = duration,
+#     inputs=gr.Audio(
+#         type="filepath"
+#     ),
+
+#     outputs="number"
+# )
+
+# demo.launch()
+
+
+
+
+
+# def audio(audio):
+#     return audio 
+
+# demo = gr.Interface(
+
+#     fn = audio,
+
+#     inputs=gr.Audio(),
+
+#     outputs=gr.Audio()
+# )
+
+# demo.launch()
+
+
+# gr.Audio(
+#     type="filepath"
+# )
+
+
+# gr.Audio(
+
+#     type="numpy"
+# )
+
+
+# gr.Audio(
+
+#     sources=[
+#         "microphone"
+#     ]
+# )
+
+# gr.Audio(
+#     sources= [
+#         "upload"
+#     ]
+# )
+
+
+# gr.Audio(
+
+#     sources=[
+#         "upload",
+#         "microphone"
+#     ]
+# )
+
+
+
+
+
+
+# def size(img):
+
+#     return str(img.shape)
+
+
+# demo = gr.Interface(
+
+#     fn = size,
+
+#     inputs=gr.Image(),
+
+#     outputs="text"
+# )
+
+
+# demo.launch()
 
 
 
