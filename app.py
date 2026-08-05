@@ -2,223 +2,308 @@ import gradio as gr
 import librosa
 import pandas as pd 
 from PIL import Image
+import time
+import matplotlib.pyplot as plt
 
 
 
-# import gradio as gr
 
-# def words(text):
+# def analyze(df):
 
-#     return len(text.split())
+#     fig=plt.figure()
 
-# with gr.Blocks() as demo:
+#     df.hist()
 
-#     txt=gr.Textbox(lines=5)
-
-#     out=gr.Number()
-
-#     txt.input(
-
-#         words,
-
-#         txt,
-
-#         out
-
-#     )
-
-# demo.launch()
-
-# import gradio as gr
-
-# def upper(text):
-
-#     return text.upper()
+#     return df.describe(),fig
 
 # with gr.Blocks() as demo:
 
-#     inp=gr.Textbox()
+#     gr.Markdown(
 
-#     out=gr.Textbox()
-
-#     inp.input(
-
-#         upper,
-
-#         inp,
-
-#         out
+#         "# Employee Analytics Dashboard"
 
 #     )
 
-# demo.launch()
+#     data=gr.Dataframe()
 
+#     btn=gr.Button(
 
-# import gradio as gr
+#         "Analyze",
 
-# def counter(text):
-
-#     return len(text)
-
-# with gr.Blocks() as demo:
-
-#     txt=gr.Textbox()
-
-#     out=gr.Number()
-
-#     txt.input(
-
-#         counter,
-
-#         txt,
-
-#         out
+#         variant="primary"
 
 #     )
 
-# demo.launch()
+#     stats=gr.Dataframe()
 
-
-
-# def gpu(flag):
-
-#     return "GPU Enabled" if flag else "CPU"
-
-# with gr.Blocks() as demo:
-
-#     chk=gr.Checkbox()
-
-#     txt=gr.Textbox()
-
-#     chk.change(
-
-#         gpu,
-
-#         chk,
-
-#         txt
-
-#     )
-
-# demo.launch()
-
-# import gradio as gr
-
-# def language(lang):
-
-#     return f"You selected {lang}"
-
-# with gr.Blocks() as demo:
-
-#     d=gr.Dropdown(
-
-#         [
-
-#             "Python",
-
-#             "Java",
-
-#             "C++"
-
-#         ]
-
-#     )
-
-#     out=gr.Textbox()
-
-#     d.change(
-
-#         language,
-
-#         d,
-
-#         out
-
-#     )
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# def square(x):
-
-#     return x*x
-
-# with gr.Blocks() as demo:
-
-#     slider=gr.Slider(0,100)
-
-#     out=gr.Number()
-
-#     slider.change(
-
-#         square,
-
-#         slider,
-
-#         out
-
-#     )
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# def calc(a,b):
-
-#     return a+b,a*b
-
-# with gr.Blocks() as demo:
-
-#     a=gr.Number()
-
-#     b=gr.Number()
-
-#     add=gr.Number()
-
-#     mul=gr.Number()
-
-#     gr.Button("Calculate").click(
-
-#         calc,
-
-#         [a,b],
-
-#         [add,mul]
-
-#     )
-
-# demo.launch()
-
-# def employee(name, age):
-
-#     return f"{name} : {age}"
-
-# with gr.Blocks() as demo:
-
-#     name = gr.Textbox()
-
-#     age = gr.Number()
-
-#     out = gr.Textbox()
-
-#     btn = gr.Button("Show")
+#     chart=gr.Plot()
 
 #     btn.click(
 
-#         employee,
+#         analyze,
 
-#         [name, age],
+#         data,
 
-#         out
+#         [stats,chart]
 
 #     )
 
 # demo.launch()
 
 
+# import gradio as gr
+
+# code="""
+
+# def predict(x):
+
+#     return model.predict(x)
+
+# """
+
+# gr.Interface(
+
+#     lambda:code,
+
+#     outputs=gr.Code()
+
+# ).launch()
+
+# def info():
+
+#     return {
+
+#         "Accuracy":0.96,
+
+#         "Model":"XGBoost",
+
+#         "Version":"1.0"
+
+#     }
+
+# gr.Interface(
+
+#     info,
+
+#     outputs=gr.JSON()
+
+# ).launch()
+
+
+# import pandas as pd
+
+# df=pd.DataFrame({
+
+#     "Prediction":[
+
+#         "Stay",
+
+#         "Leave"
+
+#     ]
+
+# })
+
+# df.to_csv(
+
+#     "prediction.csv",
+
+#     index=False
+
+# )
+
+
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import gradio as gr
+
+# def hist():
+
+#     fig=plt.figure()
+
+#     plt.hist(
+
+#         np.random.randn(1000)
+
+#     )
+
+#     return fig
+
+# gr.Interface(
+
+#     hist,
+
+#     outputs=gr.Plot()
+
+# ).launch()
+
+# import matplotlib.pyplot as plt
+# import gradio as gr
+
+# def bar():
+
+#     fig=plt.figure()
+
+#     plt.bar(
+
+#         ["A","B","C"],
+
+#         [5,8,4]
+
+#     )
+
+#     return fig
+
+# gr.Interface(
+
+#     bar,
+
+#     outputs=gr.Plot()
+
+# ).launch()
+
+# import matplotlib.pyplot as plt
+# import gradio as gr
+
+# def chart():
+
+#     fig=plt.figure()
+
+#     plt.plot(
+
+#         [1,2,3,4],
+
+#         [5,7,3,8]
+
+#     )
+
+#     return fig
+
+# gr.Interface(
+
+#     chart,
+
+#     outputs=gr.Plot()
+
+# ).launch()
+
+
+# df = pd.DataFrame({
+
+#     "Age":[23,35,40],
+
+#     "Salary":[2500,7000,9000]
+
+# })
+
+# gr.Interface(
+
+#     lambda:df,
+
+#     outputs=gr.Dataframe()
+
+# ).launch()
+
+
+
+# import pandas as pd
+# import gradio as gr
+
+# df = pd.DataFrame({
+
+#     "Age":[23,35,40],
+
+#     "Salary":[2500,7000,9000]
+
+# })
+
+# gr.Interface(
+
+#     lambda:df,
+
+#     outputs=gr.Dataframe()
+
+# ).launch()
+
+
+
+# import pandas as pd
+# import gradio as gr
+
+# def stats(df):
+
+#     return df.describe()
+
+# gr.Interface(
+
+#     stats,
+
+#     gr.Dataframe(),
+
+#     gr.Dataframe()
+
+# ).launch()
+
+
+# gr.Interface(
+
+#     fn=predict,
+
+#     inputs="number",
+
+#     outputs="text",
+
+#     examples=[
+
+#         [20],
+
+#         [35],
+
+#         [50]
+
+#     ],
+
+#     cache_examples=True
+
+# ).launch()
+
+
+
+# import gradio as gr
+
+# def employee(age,salary):
+
+#     if salary>6000:
+
+#         return "Senior Employee"
+
+#     return "Junior Employee"
+
+# gr.Interface(
+
+#     employee,
+
+#     [
+
+#         gr.Number(),
+
+#         gr.Number()
+
+#     ],
+
+#     "text",
+
+#     examples=[
+
+#         [24,3000],
+
+#         [35,7000],
+
+#         [42,12000]
+
+#     ]
+
+# ).launch()
 
 # import gradio as gr
 
@@ -229,47 +314,27 @@ from PIL import Image
 
 #     return "Leave"
 
-# with gr.Blocks() as demo:
+# demo = gr.Interface(
 
-#     age = gr.Number()
+#     fn=predict,
 
-#     result = gr.Textbox()
+#     inputs=gr.Number(),
 
-#     btn = gr.Button("Predict")
+#     outputs="text",
 
-#     btn.click(
+#     examples=[
 
-#         fn=predict,
+#         [22],
 
-#         inputs=age,
+#         [35],
 
-#         outputs=result
+#         [48],
 
-#     )
+#         [27]
 
-# demo.launch()
+#     ]
 
-
-
-# import gradio as gr
-
-# def hello():
-
-#     return "Button Clicked!"
-
-# with gr.Blocks() as demo:
-
-#     output = gr.Textbox()
-
-#     button = gr.Button("Click Me")
-
-#     button.click(
-
-#         fn=hello,
-
-#         outputs=output
-
-#     )
+# )
 
 # demo.launch()
 
@@ -279,236 +344,24 @@ from PIL import Image
 
 
 
-# def predict(age,salary):
 
-#     if age>35:
 
-#         return "Employee will Stay"
 
-#     return "Employee may Leave"
+# def predict(age,progress=gr.Progress()):
 
-# css="""
+#     for i in range(100):
 
-# h1{
+#         progress(
 
-# text-align:center;
+#             i/100,
 
-# }
+#             desc="Predicting..."
 
-# """
+#         )
 
-# with gr.Blocks(
+#         time.sleep(0.02)
 
-# css=css,
-
-# theme=gr.themes.Soft()
-
-# ) as demo:
-
-#     gr.Markdown("# Employee Attrition Dashboard")
-
-#     with gr.Row():
-
-#         with gr.Group():
-
-#             gr.Markdown("### Employees")
-
-#             gr.Markdown("2450")
-
-#         with gr.Group():
-
-#             gr.Markdown("### Accuracy")
-
-#             gr.Markdown("96%")
-
-#         with gr.Group():
-
-#             gr.Markdown("### Models")
-
-#             gr.Markdown("5")
-
-#     with gr.Row():
-
-#         with gr.Column(scale=2):
-
-#             age=gr.Number(label="Age")
-
-#             salary=gr.Number(label="Salary")
-
-#             button=gr.Button(
-
-#                 "Predict",
-
-#                 variant="primary"
-
-#             )
-
-#         with gr.Column():
-
-#             result=gr.Textbox(
-
-#                 label="Prediction"
-
-#             )
-
-#     button.click(
-
-#         predict,
-
-#         [age,salary],
-
-#         result
-
-#     )
-
-#     gr.Markdown("""
-
-# ---
-
-# ©2026
-
-# Developed using Gradio
-
-# """)
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# with gr.Blocks(
-
-#     theme=gr.themes.Glass()
-
-# ) as demo:
-
-#     gr.Markdown("# Glass Theme")
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# with gr.Blocks(
-
-#     theme=gr.themes.Monochrome()
-
-# ) as demo:
-
-#     gr.Markdown("# Monochrome")
-
-# demo.launch()
-
-
-# with gr.Blocks(
-
-#     theme=gr.themes.Soft()
-
-# ) as demo:
-
-#     gr.Markdown("# Soft Theme")
-
-# demo.launch()
-
-
-
-# import gradio as gr
-
-# css="""
-
-# footer{
-
-# display:none;
-
-# }
-
-# """
-
-# with gr.Blocks(css=css) as demo:
-
-#     gr.Markdown("# AI")
-
-# demo.launch()
-
-# import gradio as gr
-
-# css="""
-
-# button{
-
-# font-size:18px;
-
-# }
-
-# """
-
-# with gr.Blocks(css=css) as demo:
-
-#     gr.Button("Predict")
-
-# demo.launch()
-
-# import gradio as gr
-
-# css="""
-
-# h1{
-
-# color:#0066ff;
-
-# text-align:center;
-
-# }
-
-# """
-
-# with gr.Blocks(css=css) as demo:
-
-#     gr.Markdown("# AI Dashboard")
-
-# demo.launch()
-
-# import gradio as gr
-
-# css="""
-
-# body{
-
-# background:#f4f6f8;
-
-# }
-
-# """
-
-# with gr.Blocks(css=css) as demo:
-
-#     gr.Markdown("# Dashboard")
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     gr.Markdown("""
-
-# ---
-
-# © 2026
-
-# Developer : Rasulbek
-
-# Powered by Gradio
-
-# """)
-
-# demo.launch()
-
-
-# def predict(age,salary):
-
-#     if age>35:
+#     if age>30:
 
 #         return "Stay"
 
@@ -516,25 +369,294 @@ from PIL import Image
 
 # with gr.Blocks() as demo:
 
-#     with gr.Row():
+#     age=gr.Number()
 
-#         with gr.Column(scale=2):
+#     result=gr.Textbox()
 
-#             age=gr.Number(label="Age")
+#     btn=gr.Button(
 
-#             salary=gr.Number(label="Salary")
+#         "Predict",
 
-#             btn=gr.Button("Predict")
+#         variant="primary"
 
-#         with gr.Column():
-
-#             result=gr.Textbox(label="Prediction")
+#     )
 
 #     btn.click(
 
 #         predict,
 
-#         [age,salary],
+#         age,
+
+#         result
+
+#     )
+
+# demo.queue()
+
+# demo.launch()
+
+
+# def batch(numbers):
+
+#     return [x*2 for x in numbers]
+
+# gr.Interface(
+
+#     batch,
+
+#     inputs=gr.Dataframe(),
+
+#     outputs=gr.Dataframe()
+
+# ).launch()
+
+
+# def bmi(weight,height):
+
+#     return weight/(height**2)
+
+# with gr.Blocks() as demo:
+
+#     w=gr.Slider(
+
+#         40,
+
+#         120,
+
+#         value=70
+
+#     )
+
+#     h=gr.Slider(
+
+#         1.4,
+
+#         2.2,
+
+#         value=1.70
+
+#     )
+
+#     out=gr.Number()
+
+#     w.change(
+
+#         bmi,
+
+#         [w,h],
+
+#         out
+
+#     )
+
+#     h.change(
+
+#         bmi,
+
+#         [w,h],
+
+#         out
+
+#     )
+
+# demo.launch()
+
+
+# def streaming():
+
+#     yield "Loading"
+
+#     yield "Processing"
+
+#     yield "Predicting"
+
+#     yield "Finished"
+
+
+
+# def stream():
+
+#     text="Hello Gradio!"
+
+#     output=""
+
+#     for ch in text:
+
+#         output+=ch
+
+#         time.sleep(0.1)
+
+#         yield output
+
+# gr.Interface(
+
+#     stream,
+
+#     outputs="text"
+
+# ).launch()
+
+
+# import gradio as gr
+# import time
+
+# def loading(progress=gr.Progress()):
+
+#     tasks=[
+
+#         "Loading Model",
+
+#         "Reading Data",
+
+#         "Prediction",
+
+#         "Saving"
+
+#     ]
+
+#     for task in tasks:
+
+#         progress(
+
+#             0,
+
+#             desc=task
+
+#         )
+
+#         time.sleep(1)
+
+#     return "Done"
+
+# gr.Interface(
+
+#     loading,
+
+#     outputs="text"
+
+
+# demo.launch()
+
+# demo.queue(
+
+#     max_size=30,
+
+#     default_concurrency_limit=3
+
+# )
+
+
+# def train(progress=gr.Progress()):
+
+#     for i in range(100):
+
+#         progress(
+
+#             i/100,
+
+#             desc=f"Training {i}%"
+
+#         )
+
+#         time.sleep(0.03)
+
+#     return "Training Finished"
+
+# with gr.Blocks() as demo:
+
+#     out=gr.Textbox()
+
+#     btn=gr.Button("Train")
+
+#     btn.click(
+
+#         train,
+
+#         outputs=out
+
+#     )
+
+# demo.launch()
+
+
+# demo.queue(
+
+#     max_size=30,
+
+#     default_concurrency_limit=3
+
+# )
+
+
+
+
+# def slow_prediction(x):
+
+#     time.sleep(5)
+
+#     return x * 2
+
+# with gr.Blocks() as demo:
+
+#     number = gr.Number()
+
+#     output = gr.Number()
+
+#     button = gr.Button("Predict")
+
+#     button.click(
+
+#         slow_prediction,
+
+#         number,
+
+#         output
+
+#     )
+
+# demo.queue()
+
+# demo.launch()
+
+# def preprocess(age):
+
+#     return age + 5
+
+# def predict(age):
+
+#     if age > 35:
+
+#         return "Stay"
+
+#     return "Leave"
+
+# with gr.Blocks() as demo:
+
+#     age = gr.Number()
+
+#     result = gr.Textbox()
+
+#     button = gr.Button(
+
+#         "Predict",
+
+#         variant="primary"
+
+#     )
+
+#     button.click(
+
+#         preprocess,
+
+#         age,
+
+#         age
+
+#     ).then(
+
+#         predict,
+
+#         age,
 
 #         result
 
@@ -543,186 +665,89 @@ from PIL import Image
 # demo.launch()
 
 
-# import gradio as gr
+# def preprocess(x):
+
+#     return x*2
+
+# def predict(x):
+
+#     return x+5
+
+# def postprocess(x):
+
+#     return f"Result : {x}"
 
 # with gr.Blocks() as demo:
 
-#     with gr.Row():
+#     inp = gr.Number()
 
-#         with gr.Group():
+#     out = gr.Textbox()
 
-#             gr.Markdown("### Highest Salary")
+#     btn = gr.Button("Predict")
 
-#             gr.Number(value=250000)
+#     btn.click(
 
-#         with gr.Group():
+#         preprocess,
 
-#             gr.Markdown("### Average Age")
+#         inp,
 
-#             gr.Number(value=34)
+#         inp
 
-# demo.launch()
+#     ).then(
 
-# import gradio as gr
+#         predict,
 
-# with gr.Blocks() as demo:
+#         inp,
 
-#     with gr.Row():
+#         inp
 
-#         with gr.Group():
+#     ).then(
 
-#             gr.Markdown("## 👨 Employees")
+#         postprocess,
 
-#             gr.Markdown("2450")
+#         inp,
 
-#         with gr.Group():
+#         out
 
-#             gr.Markdown("## 📊 Accuracy")
-
-#             gr.Markdown("96.4 %")
-
-#         with gr.Group():
-
-#             gr.Markdown("## 🚀 Predictions")
-
-#             gr.Markdown("12,584")
-
-# demo.launch()
-
-
-
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     with gr.Row():
-
-#         gr.Markdown("""
-
-# ### 👥 Employees
-
-# 2450
-
-# """)
-
-#         gr.Markdown("""
-
-# ### 📈 Accuracy
-
-# 96%
-
-# """)
-
-#         gr.Markdown("""
-
-# ### 🤖 Models
-
-# 12
-
-# """)
+#     )
 
 # demo.launch()
 
 
+# def first(x):
 
+#     return x*2
 
-# import gradio as gr
+# def second(y):
 
-# with gr.Blocks() as demo:
-
-#     gr.HTML("""
-
-# <div style="text-align:center">
-
-# <h1>🤖 AI Dashboard</h1>
-
-# <h3>Machine Learning Prediction System</h3>
-
-# </div>
-
-# """)
-
-# demo.launch()
-
-
-# import gradio as gr
+#     return y+10
 
 # with gr.Blocks() as demo:
 
-#     gr.Markdown("""
+#     num = gr.Number()
 
-# # 🤖 Employee Attrition Dashboard
+#     out = gr.Number()
 
-# ### Machine Learning Prediction System
+#     btn = gr.Button("Run")
 
-# Version : 1.0
+#     event = btn.click(
 
-# Developer : Rasulbek
+#         first,
 
-# """)
+#         num,
 
-# demo.launch()
+#         out
 
+#     )
 
+#     event.then(
 
+#         second,
 
-# def predict(name, age):
+#         out,
 
-#     if age > 30:
-#         return "Likely to Stay"
-#     return "High Attrition Risk"
+#         out
 
-# with gr.Blocks(title="Employee Attrition Dashboard") as demo:
-
-#     gr.Markdown("# 🤖 Employee Attrition Dashboard")
-
-#     with gr.Tabs():
-
-#         with gr.Tab("Prediction"):
-
-#             with gr.Row():
-
-#                 with gr.Column(scale=2):
-
-#                     with gr.Group():
-
-#                         name = gr.Textbox(label="Employee Name")
-
-#                         age = gr.Number(label="Age")
-
-#                         predict_btn = gr.Button(
-#                             "Predict",
-#                             variant="primary"
-#                         )
-
-#                 with gr.Column(scale=1):
-
-#                     result = gr.Textbox(
-#                         label="Prediction"
-#                     )
-
-#         with gr.Tab("Model Settings"):
-
-#             with gr.Accordion(
-#                 "Advanced Parameters",
-#                 open=False
-#             ):
-
-#                 gr.Slider(
-#                     0,
-#                     1,
-#                     value=0.5,
-#                     label="Confidence Threshold"
-#                 )
-
-#                 gr.Checkbox(
-#                     label="Enable GPU"
-#                 )
-
-#     predict_btn.click(
-#         fn=predict,
-#         inputs=[name, age],
-#         outputs=result
 #     )
 
 # demo.launch()
@@ -730,260 +755,293 @@ from PIL import Image
 
 
 
+# def chat(message,history):
+
+#     history.append(message)
+
+#     return history,history
+
 # with gr.Blocks() as demo:
 
-#     gr.Markdown("# Employee Attrition Dashboard")
+#     state = gr.State([])
 
-#     with gr.Tabs():
+#     inp = gr.Textbox()
 
-#         with gr.Tab("Prediction"):
+#     out = gr.JSON()
 
-#             with gr.Row():
+#     inp.submit(
 
-#                 with gr.Column(scale=2):
+#         chat,
 
-#                     with gr.Group():
+#         [inp,state],
 
-#                         name=gr.Textbox(label="Name")
+#         [out,state]
 
-#                         age=gr.Number(label="Age")
+#     )
 
-#                         salary=gr.Number(label="Salary")
+# demo.launch()
 
-#                         button=gr.Button(
 
-#                             "Predict",
 
-#                             variant="primary"
+# def add(state):
 
-#                         )
+#     state += 1
 
-#                 with gr.Column():
+#     return state,state
 
-#                     result=gr.Textbox(
+# with gr.Blocks() as demo:
 
-#                         label="Prediction"
+#     counter = gr.State(0)
 
-#                     )
+#     value = gr.Number()
 
-#         with gr.Tab("Settings"):
+#     button = gr.Button("Increase")
 
-#             with gr.Accordion(
+#     button.click(
 
-#                 "Advanced Settings"
+#         add,
 
-#             ):
+#         counter,
 
-#                 gr.Checkbox(
+#         [value,counter]
 
-#                     label="Use GPU"
+#     )
 
-#                 )
+# demo.launch()
 
-#                 gr.Slider(
+# def counter(x,state):
 
-#                     0,
+#     state += 1
 
-#                     1,
+#     return state,state
 
-#                     label="Confidence"
+# with gr.Blocks() as demo:
 
-#                 )
+#     state = gr.State(0)
+
+#     out = gr.Number()
+
+#     btn = gr.Button("Click")
+
+#     btn.click(
+
+#         counter,
+
+#         [btn,state],
+
+#         [out,state]
+
+#     )
+
+# demo.launch()
+
+
+# def cleared():
+
+#     return "Textbox Cleared"
+
+# with gr.Blocks() as demo:
+
+#     txt = gr.Textbox()
+
+#     out = gr.Textbox()
+
+#     txt.clear(
+
+#         cleared,
+
+#         outputs=out
+
+#     )
+
+# demo.launch()
+
+
+
+# def image_loaded(img):
+
+#     return img
+
+# with gr.Blocks() as demo:
+
+#     image = gr.Image()
+
+#     output = gr.Image()
+
+#     image.upload(
+
+#         image_loaded,
+
+#         image,
+
+#         output
+
+#     )
+
+# demo.launch()
+
+
+# def uploaded(file):
+
+#     return "Upload Success"
+
+# with gr.Blocks() as demo:
+
+#     file = gr.File()
+
+#     out = gr.Textbox()
+
+#     file.upload(
+
+#         uploaded,
+
+#         file,
+
+#         out
+
+#     )
 
 # demo.launch()
 
 # import gradio as gr
 
+# def tab(name):
+
+#     return f"Current Tab : {name}"
+
 # with gr.Blocks() as demo:
 
-#     with gr.Tabs():
+#     tabs = gr.Radio(
 
-#         with gr.Tab("Machine Learning"):
+#         ["Home","Charts","Prediction"]
 
-#             with gr.Tabs():
+#     )
 
-#                 with gr.Tab("Regression"):
+#     out = gr.Textbox()
 
-#                     gr.Markdown("Regression")
+#     tabs.select(
 
-#                 with gr.Tab("Classification"):
+#         tab,
 
-#                     gr.Markdown("Classification")
+#         tabs,
+
+#         out
+
+#     )
 
 # demo.launch()
 
 
+# def language(lang):
+
+#     return f"You selected : {lang}"
+
+# with gr.Blocks() as demo:
+
+#     radio = gr.Radio(
+
+#         ["Python","Java","C++"]
+
+#     )
+
+#     out = gr.Textbox()
+
+#     radio.select(
+
+#         language,
+
+#         radio,
+
+#         out
+
+#     )
+
+# demo.launch()
 
 
+# def predict(name, age):
 
+#     if age >= 30:
 
+#         return f"{name} : Stay"
+
+#     return f"{name} : Leave"
+
+# with gr.Blocks() as demo:
+
+#     gr.Markdown("# Employee Prediction")
+
+#     name = gr.Textbox(label="Name")
+
+#     age = gr.Slider(18,60)
+
+#     result = gr.Textbox()
+
+#     button = gr.Button(
+
+#         "Predict",
+
+#         variant="primary"
+
+#     )
+
+#     button.click(
+
+#         predict,
+
+#         [name, age],
+
+#         result
+
+#     )
+
+# demo.launch()
 
 
 
 # import gradio as gr
 
+# def login(user):
+
+#     return f"Welcome {user}"
+
 # with gr.Blocks() as demo:
 
-#     with gr.Tabs():
+#     username=gr.Textbox()
 
-#         with gr.Tab("Employee"):
+#     result=gr.Textbox()
 
-#             gr.Textbox(label="Name")
+#     username.submit(
 
-#             gr.Number(label="Age")
+#         login,
 
-#         with gr.Tab("Prediction"):
+#         username,
 
-#             gr.Textbox(label="Result")
+#         result
+
+#     )
 
 # demo.launch()
 
 
+# def hello(name):
 
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     with gr.Tabs():
-
-#         with gr.Tab("Home"):
-
-#             gr.Textbox()
-
-#         with gr.Tab("Charts"):
-
-#             gr.Plot()
-
-#         with gr.Tab("About"):
-
-#             gr.Markdown("# About")
-
-# demo.launch()
-
-
-
-
-
-# import gradio as gr
+#     return f"Hello {name}"
 
 # with gr.Blocks() as demo:
 
-#     with gr.Tabs():
+#     txt=gr.Textbox()
 
-#         with gr.Tab("Dashboard"):
+#     out=gr.Textbox()
 
-#             gr.Markdown("# Dashboard")
+#     txt.submit(
 
-#         with gr.Tab("Prediction"):
+#         hello,
 
-#             gr.Markdown("# Prediction")
+#         txt,
 
-# demo.launch()
+#         out
 
-
-
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     with gr.Accordion("YOLO Settings"):
-
-#         gr.Slider(0,1,label="Confidence")
-
-#         gr.Slider(0,1,label="IoU")
-
-#         gr.Number(label="Image Size")
+#     )
 
 # demo.launch()
-
-
-
-
-# with gr.Blocks() as demo:
-
-#     with gr.Accordion(
-
-#         "Hyper Parameters",
-
-#         open=True
-
-#     ):
-
-#         gr.Number(label="Batch Size")
-
-#         gr.Number(label="Epoch")
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     with gr.Accordion("Advanced Settings"):
-
-#         gr.Slider(0,100,label="Epoch")
-
-#         gr.Slider(0,1,label="Learning Rate")
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     with gr.Group():
-
-#         gr.Textbox(label="Username")
-
-#         gr.Textbox(label="Password", type="password")
-
-#         gr.Button("Login")
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     gr.Markdown("# Employee Dashboard")
-
-#     with gr.Group():
-
-#         gr.Markdown("## Employee Information")
-
-#         gr.Textbox(label="Name")
-
-#         gr.Number(label="Age")
-
-#         gr.Button("Predict")
-
-# demo.launch()
-
-
-# import gradio as gr
-
-# with gr.Blocks() as demo:
-
-#     with gr.Group():
-
-#         gr.Textbox(label="Name")
-
-#         gr.Number(label="Age")
-
-#         gr.Number(label="Salary")
-
-# demo.launch()
-
-
-
-
-
-
-# def predict(name, age, salary):
-
-#     if age > 35:
-#         return "Stay", "92%"
-
