@@ -1,321 +1,387 @@
+from pathlib import Path
 import joblib
 import pandas as pd
 import gradio as gr
 
-from pathlib import Path
+
+# ============================================================
+# CONFIG
+# ============================================================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = (
+    BASE_DIR
+    / "Notebook"
+    / "Models"
+    / "xgboost_pipeline.pkl"
+)
 
 
 
-MODEL_PATH = Path("C:\Users\Rasulbekk\Desktop\Employee_Attrition_Project\Notebook\Models\xgboost_pipeline.pkl")
+# ============================================================
+# LOAD MODEL
+# ============================================================
 
-pipeline = joblib.load(MODEL_PATH)
+try:
+    pipeline = joblib.load(MODEL_PATH)
+    MODEL_STATUS = "🟢 Model loaded successfully"
+except Exception as e:
+    pipeline = None
+    MODEL_STATUS = f"🔴 Model loading error: {e}"
 
+
+# ============================================================
+# PIPELINE FEATURES
+# ============================================================
+
+PIPELINE_FEATURES = [
+    "Age",
+    "BusinessTravel",
+    "DailyRate",
+    "Department",
+    "DistanceFromHome",
+    "Education",
+    "EducationField",
+    "EmployeeNumber",
+    "EnvironmentSatisfaction",
+    "Gender",
+    "HourlyRate",
+    "JobInvolvement",
+    "JobLevel",
+    "JobRole",
+    "JobSatisfaction",
+    "MaritalStatus",
+    "MonthlyIncome",
+    "MonthlyRate",
+    "NumCompaniesWorked",
+    "OverTime",
+    "PercentSalaryHike",
+    "PerformanceRating",
+    "RelationshipSatisfaction",
+    "StockOptionLevel",
+    "TotalWorkingYears",
+    "TrainingTimesLastYear",
+    "WorkLifeBalance",
+    "YearsAtCompany",
+    "YearsInCurrentRole",
+    "YearsSinceLastPromotion",
+    "YearsWithCurrManager",
+    "Income_Per_Age",
+    "Work_Ratio",
+    "Loyalty_Ratio",
+    "OverTime_Binary",
+]
+
+
+# ============================================================
+# CSS
+# ============================================================
 
 CSS = """
-
-.gradio-container{
-
-    max-width:1400px !important;
-
-    margin:auto;
-
+.gradio-container {
+    max-width: 1400px !important;
+    margin: auto;
 }
 
-.main-title{
-
-    font-size:38px;
-
-    font-weight:bold;
-
-    text-align:center;
-
-    color:#2563eb;
-
-    margin-bottom:10px;
-
+.hero {
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    background: linear-gradient(135deg, #111827, #1e3a8a);
+    color: white;
 }
 
-.subtitle{
-
-    text-align:center;
-
-    color:gray;
-
-    margin-bottom:25px;
-
+.hero h1 {
+    font-size: 38px;
+    margin-bottom: 8px;
 }
 
-.result-card{
-
-    border-radius:15px;
-
-    padding:18px;
-
-    background:#f4f4f4;
-
+.hero p {
+    font-size: 17px;
+    opacity: .9;
 }
 
-.footer{
-
-    text-align:center;
-
-    color:gray;
-
-    margin-top:20px;
-
+.result-card {
+    border-radius: 18px;
+    padding: 22px;
+    border: 1px solid #e5e7eb;
+    min-height: 150px;
 }
 
+.footer {
+    text-align: center;
+    padding: 25px;
+    margin-top: 30px;
+    color: #6b7280;
+}
 """
 
 
-def predict_employee(
+# ============================================================
+# FEATURE ENGINEERING
+# ============================================================
 
-    Age,
-    BusinessTravel,
-    DailyRate,
-    Department,
-    DistanceFromHome,
-    Education,
-    EducationField,
-    EmployeeNumber,
-    EnvironmentSatisfaction,
-    Gender,
-    HourlyRate,
-    JobInvolvement,
-    JobLevel,
-    JobRole,
-    JobSatisfaction,
-    MaritalStatus,
-    MonthlyIncome,
-    MonthlyRate,
-    NumCompaniesWorked,
-    OverTime,
-    PercentSalaryHike,
-    PerformanceRating,
-    RelationshipSatisfaction,
-    StockOptionLevel,
-    TotalWorkingYears,
-    TrainingTimesLastYear,
-    WorkLifeBalance,
-    YearsAtCompany,
-    YearsInCurrentRole,
-    YearsSinceLastPromotion,
-    YearsWithCurrManager
+def create_features(df):
+    df = df.copy()
 
+    df["Income_Per_Age"] = (
+        df["MonthlyIncome"] / df["Age"].replace(0, 1)
+    )
+
+    df["Work_Ratio"] = (
+        df["YearsAtCompany"] /
+        df["TotalWorkingYears"].replace(0, 1)
+    )
+
+    df["Loyalty_Ratio"] = (
+        df["YearsWithCurrManager"] /
+        df["YearsAtCompany"].replace(0, 1)
+    )
+
+    df["OverTime_Binary"] = (
+        df["OverTime"]
+        .map({"Yes": 1, "No": 0})
+        .fillna(0)
+    )
+
+    return df
+
+
+# ============================================================
+# PREPARE EMPLOYEE
+# ============================================================
+
+def prepare_employee(
+    Age, BusinessTravel, DailyRate, Department, DistanceFromHome,
+    Education, EducationField, EmployeeNumber,
+    EnvironmentSatisfaction, Gender, HourlyRate, JobInvolvement,
+    JobLevel, JobRole, JobSatisfaction, MaritalStatus,
+    MonthlyIncome, MonthlyRate, NumCompaniesWorked, OverTime,
+    PercentSalaryHike, PerformanceRating, RelationshipSatisfaction,
+    StockOptionLevel, TotalWorkingYears, TrainingTimesLastYear,
+    WorkLifeBalance, YearsAtCompany, YearsInCurrentRole,
+    YearsSinceLastPromotion, YearsWithCurrManager
 ):
-
-
-
-    Income_Per_Age = MonthlyIncome / Age
-
-    Work_Ratio = YearsAtCompany / (TotalWorkingYears + 1)
-
-    Loyalty_Ratio = YearsWithCurrManager / (YearsAtCompany + 1)
-
-    OverTime_Binary = 1 if OverTime == "Yes" else 0
-
-  
-    df = pd.DataFrame({
-
-        "Age":[Age],
-
-        "BusinessTravel":[BusinessTravel],
-
-        "DailyRate":[DailyRate],
-
-        "Department":[Department],
-
-        "DistanceFromHome":[DistanceFromHome],
-
-        "Education":[Education],
-
-        "EducationField":[EducationField],
-
-        "EmployeeNumber":[EmployeeNumber],
-
-        "EnvironmentSatisfaction":[EnvironmentSatisfaction],
-
-        "Gender":[Gender],
-
-        "HourlyRate":[HourlyRate],
-
-        "JobInvolvement":[JobInvolvement],
-
-        "JobLevel":[JobLevel],
-
-        "JobRole":[JobRole],
-
-        "JobSatisfaction":[JobSatisfaction],
-
-        "MaritalStatus":[MaritalStatus],
-
-        "MonthlyIncome":[MonthlyIncome],
-
-        "MonthlyRate":[MonthlyRate],
-
-        "NumCompaniesWorked":[NumCompaniesWorked],
-
-        "OverTime":[OverTime],
-
-        "PercentSalaryHike":[PercentSalaryHike],
-
-        "PerformanceRating":[PerformanceRating],
-
-        "RelationshipSatisfaction":[RelationshipSatisfaction],
-
-        "StockOptionLevel":[StockOptionLevel],
-
-        "TotalWorkingYears":[TotalWorkingYears],
-
-        "TrainingTimesLastYear":[TrainingTimesLastYear],
-
-        "WorkLifeBalance":[WorkLifeBalance],
-
-        "YearsAtCompany":[YearsAtCompany],
-
-        "YearsInCurrentRole":[YearsInCurrentRole],
-
-        "YearsSinceLastPromotion":[YearsSinceLastPromotion],
-
-        "YearsWithCurrManager":[YearsWithCurrManager],
-
-        "Income_Per_Age":[Income_Per_Age],
-
-        "Work_Ratio":[Work_Ratio],
-
-        "Loyalty_Ratio":[Loyalty_Ratio],
-
-        "OverTime_Binary":[OverTime_Binary]
-
-    })
-
-    prediction = pipeline.predict(df)[0]
-
-    probability = pipeline.predict_proba(df)[0]
-
-    stay = probability[0] * 100
-
-    leave = probability[1] * 100
-
-    if prediction == 0:
-
-        result = "🟢 Employee Will Stay"
-
-    else:
-
-        result = "🔴 Employee Will Leave"
-
-    return (
-
-        result,
-
-        round(stay,2),
-
-        round(leave,2)
-
-    )
-
-
-with gr.Blocks(
-    title="Employee Attrition AI",
-    css=CSS,
-    theme=gr.themes.Soft()
-) as demo:
-
-
-
-    gr.Markdown(
-        """
-        <div class="main-title">
-            Employee Attrition Prediction AI
-        </div>
-
-        <div class="subtitle">
-            XGBoost-powered Machine Learning System
-            for Employee Attrition Prediction
-        </div>
-        """
-    )
-
-
-
-    gr.Markdown(
-        """
-        ## 👤 Employee Information
-
-        Enter employee information below and click
-        **Predict Attrition** to generate a prediction.
-        """
-    )
-
-
-
-    with gr.Accordion(
-        "👤 Basic Information",
-        open=True
-    ):
-
-        with gr.Row():
-
-            Age = gr.Number(
-                label="Age",
-                value=35,
-                minimum=18,
-                maximum=70,
-                step=1
+    return pd.DataFrame([{
+        "Age": Age,
+        "BusinessTravel": BusinessTravel,
+        "DailyRate": DailyRate,
+        "Department": Department,
+        "DistanceFromHome": DistanceFromHome,
+        "Education": Education,
+        "EducationField": EducationField,
+        "EmployeeNumber": EmployeeNumber,
+        "EnvironmentSatisfaction": EnvironmentSatisfaction,
+        "Gender": Gender,
+        "HourlyRate": HourlyRate,
+        "JobInvolvement": JobInvolvement,
+        "JobLevel": JobLevel,
+        "JobRole": JobRole,
+        "JobSatisfaction": JobSatisfaction,
+        "MaritalStatus": MaritalStatus,
+        "MonthlyIncome": MonthlyIncome,
+        "MonthlyRate": MonthlyRate,
+        "NumCompaniesWorked": NumCompaniesWorked,
+        "OverTime": OverTime,
+        "PercentSalaryHike": PercentSalaryHike,
+        "PerformanceRating": PerformanceRating,
+        "RelationshipSatisfaction": RelationshipSatisfaction,
+        "StockOptionLevel": StockOptionLevel,
+        "TotalWorkingYears": TotalWorkingYears,
+        "TrainingTimesLastYear": TrainingTimesLastYear,
+        "WorkLifeBalance": WorkLifeBalance,
+        "YearsAtCompany": YearsAtCompany,
+        "YearsInCurrentRole": YearsInCurrentRole,
+        "YearsSinceLastPromotion": YearsSinceLastPromotion,
+        "YearsWithCurrManager": YearsWithCurrManager,
+    }])
+
+
+# ============================================================
+# PREDICTION
+# ============================================================
+
+def predict_employee(*args):
+
+    if pipeline is None:
+        return (
+            f"## 🔴 Model Error\n\n`{MODEL_STATUS}`",
+            "### 🟢 Stay Probability\n\n**N/A**",
+            "### 🔴 Leave Probability\n\n**N/A**"
+        )
+
+    try:
+        df = prepare_employee(*args)
+        df = create_features(df)
+
+        missing = [
+            col for col in PIPELINE_FEATURES
+            if col not in df.columns
+        ]
+
+        if missing:
+            return (
+                "## 🔴 Feature Error\n\n"
+                f"Missing features:\n`{missing}`",
+                "### 🟢 Stay Probability\n\n**N/A**",
+                "### 🔴 Leave Probability\n\n**N/A**"
             )
 
+        df = df[PIPELINE_FEATURES]
+
+        prediction = int(pipeline.predict(df)[0])
+        probabilities = pipeline.predict_proba(df)[0]
+
+        classes = list(pipeline.classes_)
+        probability_map = dict(zip(classes, probabilities))
+
+        stay = probability_map.get(0, 0) * 100
+        leave = probability_map.get(1, 0) * 100
+
+        if prediction == 1:
+            result = f"""
+## 🔴 Attrition Risk Detected
+
+The model predicts that this employee is likely to **LEAVE**.
+
+**Leave Probability:** `{leave:.2f}%`
+
+**Stay Probability:** `{stay:.2f}%`
+"""
+        else:
+            result = f"""
+## 🟢 Employee Likely to Stay
+
+The model predicts that this employee is likely to **STAY**.
+
+**Stay Probability:** `{stay:.2f}%`
+
+**Leave Probability:** `{leave:.2f}%`
+"""
+
+        return (
+            result,
+            f"### 🟢 Stay Probability\n\n# {stay:.2f}%",
+            f"### 🔴 Leave Probability\n\n# {leave:.2f}%"
+        )
+
+    except Exception as e:
+        return (
+            f"## 🔴 Prediction Error\n\n```text\n{type(e).__name__}: {e}\n```",
+            "### 🟢 Stay Probability\n\n**N/A**",
+            "### 🔴 Leave Probability\n\n**N/A**"
+        )
+
+
+# ============================================================
+# EXAMPLE
+# ============================================================
+
+EXAMPLE_DATA = [
+    35,
+    "Travel_Rarely",
+    800,
+    "Sales",
+    5,
+    3,
+    "Life Sciences",
+    1001,
+    3,
+    "Male",
+    60,
+    3,
+    2,
+    "Sales Executive",
+    3,
+    "Single",
+    5000,
+    14000,
+    2,
+    "No",
+    15,
+    3,
+    3,
+    1,
+    10,
+    2,
+    3,
+    5,
+    3,
+    1,
+    3,
+]
+
+
+# ============================================================
+# GRADIO UI
+# ============================================================
+
+with gr.Blocks(title="Employee Attrition AI") as demo:
+
+    gr.HTML("""
+    <div class="hero">
+        <h1>🤖 Employee Attrition AI</h1>
+        <p>
+            Professional Employee Attrition Prediction
+            powered by XGBoost Machine Learning.
+        </p>
+    </div>
+    """)
+
+    gr.Markdown(f"### System Status\n\n{MODEL_STATUS}")
+
+    gr.Markdown("# 👤 Employee Information")
+
+    with gr.Row():
+        with gr.Column():
+            Age = gr.Number(label="Age", value=35)
             Gender = gr.Dropdown(
-                choices=[
-                    "Male",
-                    "Female"
-                ],
-                value="Male",
+                ["Male", "Female"],
                 label="Gender"
             )
-
             MaritalStatus = gr.Dropdown(
-                choices=[
-                    "Single",
-                    "Married",
-                    "Divorced"
-                ],
-                value="Single",
+                ["Single", "Married", "Divorced"],
                 label="Marital Status"
             )
 
-            Education = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
+        with gr.Column():
+            Education = gr.Number(
+                label="Education",
+                minimum=1,
+                maximum=5,
+                value=3
+            )
+            EducationField = gr.Dropdown(
+                [
+                    "Life Sciences",
+                    "Medical",
+                    "Marketing",
+                    "Technical Degree",
+                    "Human Resources",
+                    "Other"
                 ],
-                value=3,
-                label="Education Level"
+                label="Education Field"
+            )
+            EmployeeNumber = gr.Number(
+                label="Employee Number",
+                value=1001
             )
 
+    gr.Markdown("## 💼 Job Information")
 
-    with gr.Accordion(
-        "💼 Job Information",
-        open=True
-    ):
-
-        with gr.Row():
-
+    with gr.Row():
+        with gr.Column():
             Department = gr.Dropdown(
-                choices=[
+                [
                     "Sales",
                     "Research & Development",
                     "Human Resources"
                 ],
-                value="Sales",
                 label="Department"
             )
 
             JobRole = gr.Dropdown(
-                choices=[
+                [
                     "Sales Executive",
                     "Research Scientist",
                     "Laboratory Technician",
@@ -326,746 +392,322 @@ with gr.Blocks(
                     "Research Director",
                     "Human Resources"
                 ],
-                value="Sales Executive",
                 label="Job Role"
             )
 
-            JobLevel = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
-                value=2,
-                label="Job Level"
+            JobLevel = gr.Number(
+                label="Job Level",
+                minimum=1,
+                maximum=5,
+                value=2
             )
 
-        with gr.Row():
-
-            JobInvolvement = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4
-                ],
-                value=3,
-                label="Job Involvement"
-            )
-
-            JobSatisfaction = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4
-                ],
-                value=3,
-                label="Job Satisfaction"
-            )
-
-            EnvironmentSatisfaction = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4
-                ],
-                value=3,
-                label="Environment Satisfaction"
-            )
-
-            RelationshipSatisfaction = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4
-                ],
-                value=3,
-                label="Relationship Satisfaction"
-            )
-
- 
-
-    with gr.Accordion(
-        "🏢 Business & Career Information",
-        open=False
-    ):
-
-        with gr.Row():
-
+        with gr.Column():
             BusinessTravel = gr.Dropdown(
-                choices=[
+                [
                     "Travel_Rarely",
                     "Travel_Frequently",
                     "Non-Travel"
                 ],
-                value="Travel_Rarely",
                 label="Business Travel"
             )
 
-            EducationField = gr.Dropdown(
-                choices=[
-                    "Life Sciences",
-                    "Medical",
-                    "Marketing",
-                    "Technical Degree",
-                    "Human Resources",
-                    "Other"
-                ],
-                value="Life Sciences",
-                label="Education Field"
-            )
-
             OverTime = gr.Dropdown(
-                choices=[
-                    "Yes",
-                    "No"
-                ],
-                value="No",
-                label="Overtime"
+                ["Yes", "No"],
+                label="OverTime"
             )
 
-        with gr.Row():
-
-            StockOptionLevel = gr.Dropdown(
-                choices=[
-                    0,
-                    1,
-                    2,
-                    3
-                ],
-                value=1,
-                label="Stock Option Level"
-            )
-
-            PerformanceRating = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4
-                ],
-                value=3,
-                label="Performance Rating"
-            )
-
-            WorkLifeBalance = gr.Dropdown(
-                choices=[
-                    1,
-                    2,
-                    3,
-                    4
-                ],
-                value=3,
-                label="Work-Life Balance"
-            )
-
-
-    with gr.Accordion(
-        "💰 Financial Information",
-        open=False
-    ):
-
-        with gr.Row():
-
-            MonthlyIncome = gr.Number(
-                label="Monthly Income",
-                value=5000,
-                minimum=100,
-                step=100
-            )
-
-            MonthlyRate = gr.Number(
-                label="Monthly Rate",
-                value=14000,
-                minimum=0,
-                step=100
-            )
-
-            DailyRate = gr.Number(
-                label="Daily Rate",
-                value=800,
-                minimum=0,
-                step=10
-            )
-
-            HourlyRate = gr.Number(
-                label="Hourly Rate",
-                value=60,
-                minimum=0,
-                step=1
-            )
-
-        with gr.Row():
-
-            PercentSalaryHike = gr.Number(
-                label="Percent Salary Hike",
-                value=15,
-                minimum=0,
-                maximum=100,
-                step=1
-            )
-
-
-    with gr.Accordion(
-        "📊 Work History",
-        open=False
-    ):
-
-        with gr.Row():
-
-            DistanceFromHome = gr.Number(
-                label="Distance From Home",
-                value=5,
-                minimum=0,
-                step=1
-            )
-
-            TotalWorkingYears = gr.Number(
-                label="Total Working Years",
-                value=10,
-                minimum=0,
-                step=1
-            )
-
-            NumCompaniesWorked = gr.Number(
-                label="Number of Companies Worked",
-                value=2,
-                minimum=0,
-                step=1
-            )
-
-            TrainingTimesLastYear = gr.Number(
-                label="Training Times Last Year",
-                value=2,
-                minimum=0,
-                step=1
-            )
-
-        with gr.Row():
-
-            YearsAtCompany = gr.Number(
-                label="Years At Company",
-                value=5,
-                minimum=0,
-                step=1
-            )
-
-            YearsInCurrentRole = gr.Number(
-                label="Years In Current Role",
-                value=3,
-                minimum=0,
-                step=1
-            )
-
-            YearsSinceLastPromotion = gr.Number(
-                label="Years Since Last Promotion",
-                value=1,
-                minimum=0,
-                step=1
-            )
-
-            YearsWithCurrManager = gr.Number(
-                label="Years With Current Manager",
-                value=3,
-                minimum=0,
-                step=1
-            )
-
-  
-
-    with gr.Accordion(
-        "⚙️ System Information",
-        open=False
-    ):
-
-        with gr.Row():
-
-            EmployeeNumber = gr.Number(
-                label="Employee Number",
-                value=1001,
+            JobInvolvement = gr.Number(
+                label="Job Involvement",
                 minimum=1,
-                step=1
+                maximum=4,
+                value=3
             )
 
+    gr.Markdown("## 😊 Satisfaction")
 
-
-
-gr.Markdown(
-    """
-    ## 🤖 AI Prediction
-
-    The trained XGBoost model analyzes the employee profile
-    and estimates the probability of employee attrition.
-    """
-)
-
-with gr.Row():
-
- 
-
-    with gr.Column(scale=1):
-
-        predict_btn = gr.Button(
-            "🚀 Predict Attrition",
-            variant="primary",
-            size="lg"
+    with gr.Row():
+        EnvironmentSatisfaction = gr.Number(
+            label="Environment Satisfaction",
+            minimum=1,
+            maximum=4,
+            value=3
         )
 
-        clear_btn = gr.Button(
-            "🗑️ Clear Form",
-            variant="secondary"
+        JobSatisfaction = gr.Number(
+            label="Job Satisfaction",
+            minimum=1,
+            maximum=4,
+            value=3
+        )
+
+        RelationshipSatisfaction = gr.Number(
+            label="Relationship Satisfaction",
+            minimum=1,
+            maximum=4,
+            value=3
+        )
+
+        WorkLifeBalance = gr.Number(
+            label="Work-Life Balance",
+            minimum=1,
+            maximum=4,
+            value=3
+        )
+
+    gr.Markdown("## 💰 Financial Information")
+
+    with gr.Row():
+        DailyRate = gr.Number(label="Daily Rate", value=800)
+        HourlyRate = gr.Number(label="Hourly Rate", value=60)
+        MonthlyIncome = gr.Number(
+            label="Monthly Income",
+            value=5000
+        )
+        MonthlyRate = gr.Number(
+            label="Monthly Rate",
+            value=14000
+        )
+
+    gr.Markdown("## 📈 Career Information")
+
+    with gr.Row():
+        DistanceFromHome = gr.Number(
+            label="Distance From Home",
+            value=5
+        )
+        NumCompaniesWorked = gr.Number(
+            label="Number of Companies Worked",
+            value=2
+        )
+        TotalWorkingYears = gr.Number(
+            label="Total Working Years",
+            value=10
+        )
+        YearsAtCompany = gr.Number(
+            label="Years At Company",
+            value=5
+        )
+
+    with gr.Row():
+        YearsInCurrentRole = gr.Number(
+            label="Years In Current Role",
+            value=3
+        )
+        YearsSinceLastPromotion = gr.Number(
+            label="Years Since Last Promotion",
+            value=1
+        )
+        YearsWithCurrManager = gr.Number(
+            label="Years With Current Manager",
+            value=3
+        )
+        TrainingTimesLastYear = gr.Number(
+            label="Training Times Last Year",
+            value=2
+        )
+
+    gr.Markdown("## 🎯 Performance & Compensation")
+
+    with gr.Row():
+        PercentSalaryHike = gr.Number(
+            label="Percent Salary Hike",
+            value=15
+        )
+        PerformanceRating = gr.Number(
+            label="Performance Rating",
+            minimum=1,
+            maximum=5,
+            value=3
+        )
+        StockOptionLevel = gr.Number(
+            label="Stock Option Level",
+            minimum=0,
+            maximum=3,
+            value=1
+        )
+
+    # ========================================================
+    # INPUT LIST
+    # ========================================================
+
+    inputs = [
+        Age,
+        BusinessTravel,
+        DailyRate,
+        Department,
+        DistanceFromHome,
+        Education,
+        EducationField,
+        EmployeeNumber,
+        EnvironmentSatisfaction,
+        Gender,
+        HourlyRate,
+        JobInvolvement,
+        JobLevel,
+        JobRole,
+        JobSatisfaction,
+        MaritalStatus,
+        MonthlyIncome,
+        MonthlyRate,
+        NumCompaniesWorked,
+        OverTime,
+        PercentSalaryHike,
+        PerformanceRating,
+        RelationshipSatisfaction,
+        StockOptionLevel,
+        TotalWorkingYears,
+        TrainingTimesLastYear,
+        WorkLifeBalance,
+        YearsAtCompany,
+        YearsInCurrentRole,
+        YearsSinceLastPromotion,
+        YearsWithCurrManager,
+    ]
+
+    # ========================================================
+    # BUTTONS
+    # ========================================================
+
+    with gr.Row():
+        predict_btn = gr.Button(
+            "🚀 Predict Attrition",
+            variant="primary"
         )
 
         example_btn = gr.Button(
-            "📋 Load Example",
-            variant="secondary"
+            "📋 Load Example"
         )
 
+        clear_btn = gr.Button(
+            "🗑️ Clear"
+        )
 
- 
-    with gr.Column(scale=2):
+    # ========================================================
+    # OUTPUTS
+    # ========================================================
+
+    with gr.Row():
 
         prediction_output = gr.Markdown(
             """
-            ### Prediction
+## 🔮 Prediction
 
-            Enter employee information and click
-            **Predict Attrition**.
-            """,
+Enter employee information and click
+**Predict Attrition**.
+""",
             elem_classes=["result-card"]
         )
 
-
-
-
-with gr.Row():
-
-    stay_probability = gr.Number(
-        label="🟢 Stay Probability (%)",
-        value=0,
-        interactive=False
-    )
-
-    leave_probability = gr.Number(
-        label="🔴 Leave Probability (%)",
-        value=0,
-        interactive=False
-    )
-
-
-
-probability_output = gr.Markdown(
-    """
-    ### 📊 Prediction Probability
-
-    No prediction available yet.
-    """,
-    elem_classes=["result-card"]
-)
-
-
-
-
-inputs = [
-
-    Age,
-    BusinessTravel,
-    DailyRate,
-    Department,
-    DistanceFromHome,
-    Education,
-    EducationField,
-    EmployeeNumber,
-    EnvironmentSatisfaction,
-    Gender,
-    HourlyRate,
-    JobInvolvement,
-    JobLevel,
-    JobRole,
-    JobSatisfaction,
-    MaritalStatus,
-    MonthlyIncome,
-    MonthlyRate,
-    NumCompaniesWorked,
-    OverTime,
-    PercentSalaryHike,
-    PerformanceRating,
-    RelationshipSatisfaction,
-    StockOptionLevel,
-    TotalWorkingYears,
-    TrainingTimesLastYear,
-    WorkLifeBalance,
-    YearsAtCompany,
-    YearsInCurrentRole,
-    YearsSinceLastPromotion,
-    YearsWithCurrManager
-
-]
-
-
-def prediction_result(
-    result,
-    stay,
-    leave
-):
-
-    if "Stay" in result:
-
-        status = "🟢 **Employee is likely to STAY**"
-
-    else:
-
-        status = "🔴 **Employee is likely to LEAVE**"
-
-
-    probability_html = f"""
-    ### 📊 Prediction Probability
-
-    **Stay Probability**
-
-    `{stay:.2f}%`
-
-    **Leave Probability**
-
-    `{leave:.2f}%`
-
-    ---
-
-    {status}
-    """
-
-    return probability_html
-
-
-predict_btn.click(
-
-    fn=prediction_result,
-
-    inputs=[
-        prediction_output,
-        stay_probability,
-        leave_probability
-    ],
-
-    outputs=probability_output
-
-)
-
-
-
-def clear_form():
-
-    return [
-
-        None,   # Age
-        None,   # BusinessTravel
-        None,   # DailyRate
-        None,   # Department
-        None,   # DistanceFromHome
-        None,   # Education
-        None,   # EducationField
-        None,   # EmployeeNumber
-        None,   # EnvironmentSatisfaction
-        None,   # Gender
-        None,   # HourlyRate
-        None,   # JobInvolvement
-        None,   # JobLevel
-        None,   # JobRole
-        None,   # JobSatisfaction
-        None,   # MaritalStatus
-        None,   # MonthlyIncome
-        None,   # MonthlyRate
-        None,   # NumCompaniesWorked
-        None,   # OverTime
-        None,   # PercentSalaryHike
-        None,   # PerformanceRating
-        None,   # RelationshipSatisfaction
-        None,   # StockOptionLevel
-        None,   # TotalWorkingYears
-        None,   # TrainingTimesLastYear
-        None,   # WorkLifeBalance
-        None,   # YearsAtCompany
-        None,   # YearsInCurrentRole
-        None,   # YearsSinceLastPromotion
-        None,   # YearsWithCurrManager
-
-    ]
-
-
-clear_btn.click(
-
-    fn=clear_form,
-
-    inputs=[],
-
-    outputs=inputs
-
-)
-
-
-
-example_data = [
-
-    35,                     # Age
-
-    "Travel_Rarely",        # BusinessTravel
-
-    800,                    # DailyRate
-
-    "Sales",                # Department
-
-    5,                      # DistanceFromHome
-
-    3,                      # Education
-
-    "Life Sciences",        # EducationField
-
-    1001,                   # EmployeeNumber
-
-    3,                      # EnvironmentSatisfaction
-
-    "Male",                 # Gender
-
-    60,                     # HourlyRate
-
-    3,                      # JobInvolvement
-
-    2,                      # JobLevel
-
-    "Sales Executive",      # JobRole
-
-    3,                      # JobSatisfaction
-
-    "Single",               # MaritalStatus
-
-    5000,                   # MonthlyIncome
-
-    14000,                  # MonthlyRate
-
-    2,                      # NumCompaniesWorked
-
-    "No",                   # OverTime
-
-    15,                     # PercentSalaryHike
-
-    3,                      # PerformanceRating
-
-    3,                      # RelationshipSatisfaction
-
-    1,                      # StockOptionLevel
-
-    10,                     # TotalWorkingYears
-
-    2,                      # TrainingTimesLastYear
-
-    3,                      # WorkLifeBalance
-
-    5,                      # YearsAtCompany
-
-    3,                      # YearsInCurrentRole
-
-    1,                      # YearsSinceLastPromotion
-
-    3                       # YearsWithCurrManager
-
-]
-
-
-example_btn.click(
-
-    fn=lambda: example_data,
-
-    inputs=[],
-
-    outputs=inputs
-
-)
-
-
-
-gr.Markdown("## 📊 Prediction Analytics")
-
-with gr.Row():
-
-    with gr.Column():
-
-        gr.Markdown(
+        probability_output = gr.Markdown(
             """
-            <div class="result-card">
+## 📊 Probability
 
-            ### 🧠 Model Information
-
-            **Algorithm:** XGBoost Classifier
-
-            **Framework:** Scikit-Learn Pipeline
-
-            **Target:** Employee Attrition
-
-            **Version:** 1.0.0
-
-            **Deployment:** Gradio
-
-            </div>
-            """
+No prediction available.
+""",
+            elem_classes=["result-card"]
         )
 
-    with gr.Column():
+    with gr.Row():
 
-        gr.Markdown(
+        stay_probability = gr.Markdown(
             """
-            <div class="result-card">
+### 🟢 Stay Probability
 
-            ### 📈 Model Performance
-
-            **Accuracy:** 83.67%
-
-            **Precision:** 86%
-
-            **Recall:** 97%
-
-            **F1 Score:** 91%
-
-            **Status:** Production Ready
-
-            </div>
-            """
+# 0.00%
+""",
+            elem_classes=["result-card"]
         )
 
+        leave_probability = gr.Markdown(
+            """
+### 🔴 Leave Probability
 
+# 0.00%
+""",
+            elem_classes=["result-card"]
+        )
 
-gr.Markdown("## 📋 About This Project")
+    # ========================================================
+    # EVENTS
+    # ========================================================
 
-gr.Markdown(
-    """
-    This dashboard predicts whether an employee is likely to **Stay**
-    or **Leave** the company using a machine learning model trained on
-    the IBM Employee Attrition dataset.
-
-    ### Feature Engineering
-
-    The application automatically creates:
-
-    - Income Per Age
-    - Work Ratio
-    - Loyalty Ratio
-    - Overtime Binary Feature
-
-    ### Technologies Used
-
-    - Python
-    - XGBoost
-    - Scikit-Learn Pipeline
-    - Pandas
-    - Gradio
-    """
-)
-
-
-
-
-gr.Markdown("## 🎯 Input Feature Summary")
-
-with gr.Row():
-
-    gr.Markdown(
-        """
-        ### 👤 Personal
-
-        - Age
-        - Gender
-        - Marital Status
-        - Education
-        - Education Field
-        """
+    predict_btn.click(
+        fn=predict_employee,
+        inputs=inputs,
+        outputs=[
+            prediction_output,
+            stay_probability,
+            leave_probability
+        ]
     )
 
-    gr.Markdown(
-        """
-        ### 💼 Job
-
-        - Department
-        - Job Role
-        - Job Level
-        - Business Travel
-        - Overtime
-        """
+    example_btn.click(
+        fn=lambda: EXAMPLE_DATA,
+        inputs=[],
+        outputs=inputs
     )
 
-    gr.Markdown(
-        """
-        ### 💰 Financial
-
-        - Monthly Income
-        - Daily Rate
-        - Hourly Rate
-        - Salary Hike
-        """
+    clear_btn.click(
+        fn=lambda: [None] * len(inputs),
+        inputs=[],
+        outputs=inputs
     )
 
+    # ========================================================
+    # INFORMATION
+    # ========================================================
 
+    gr.Markdown("""
+## 🧠 Model Information
 
+**Algorithm:** XGBoost Classifier
 
-gr.Markdown("## 👨‍💻 Developer")
+**Framework:** Scikit-Learn Pipeline
 
-gr.Markdown(
-    """
-    <div class="result-card">
+**Target:** Employee Attrition
 
-    **Rasulbek Ruzmetov**
+**Accuracy:** 83.67%
 
-    Machine Learning Engineer
+**Deployment:** Gradio 6.20.0
+""")
 
-    Specialization:
+    gr.Markdown("""
+## ⚙️ Automatic Feature Engineering
 
-    - Machine Learning
-    - Deep Learning
-    - Computer Vision
-    - MLOps
-    - FastAPI & Gradio
+The application automatically creates:
 
-    </div>
-    """
-)
+- `Income_Per_Age`
+- `Work_Ratio`
+- `Loyalty_Ratio`
+- `OverTime_Binary`
 
+The final input is reordered according to the trained
+pipeline feature schema.
+""")
 
-
-
-gr.Markdown(
-    """
+    gr.HTML("""
     <div class="footer">
-
-    Employee Attrition Prediction Dashboard
-
-    Built with ❤️ using Gradio + XGBoost
-
-    © 2026 Rasulbek Ruzmetov
-
+        <h3>Employee Attrition AI</h3>
+        <p>Python • Pandas • XGBoost • Scikit-Learn • Gradio</p>
+        <p>© 2026</p>
     </div>
-    """
-)
+    """)
 
 
+# ============================================================
+# LAUNCH
+# ============================================================
 
 if __name__ == "__main__":
-
     demo.launch(
-
         server_name="127.0.0.1",
-
         server_port=7860,
-
         share=False,
-
-        favicon_path=None,
-
-        show_error=True
-
+        show_error=True,
+        css=CSS,
+        theme=gr.themes.Soft()
     )
 
 
-
+    
