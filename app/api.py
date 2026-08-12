@@ -122,7 +122,7 @@ class Employee(BaseModel):
 
 
 # ============================================================
-# FEATURE ENGINEERING
+# PIPELINE FEATURES
 # ============================================================
 
 PIPELINE_FEATURES = [
@@ -164,29 +164,29 @@ PIPELINE_FEATURES = [
 ]
 
 
+# ============================================================
+# FEATURE ENGINEERING
+# ============================================================
+
 def create_features(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.copy()
 
-    # Income per age
     df["Income_Per_Age"] = (
         df["MonthlyIncome"]
         / df["Age"].replace(0, 1)
     )
 
-    # Company experience ratio
     df["Work_Ratio"] = (
         df["YearsAtCompany"]
         / df["TotalWorkingYears"].replace(0, 1)
     )
 
-    # Loyalty ratio
     df["Loyalty_Ratio"] = (
         df["YearsWithCurrManager"]
         / df["YearsAtCompany"].replace(0, 1)
     )
 
-    # Overtime binary
     df["OverTime_Binary"] = (
         df["OverTime"]
         .map({
@@ -200,13 +200,10 @@ def create_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ============================================================
-# HEALTH CHECK
+# HOME
 # ============================================================
 
-@app.get(
-    "/",
-    tags=["System"]
-)
+@app.get("/", tags=["System"])
 def home():
 
     return {
@@ -217,10 +214,11 @@ def home():
     }
 
 
-@app.get(
-    "/health",
-    tags=["System"]
-)
+# ============================================================
+# HEALTH
+# ============================================================
+
+@app.get("/health", tags=["System"])
 def health():
 
     if MODEL_LOADED:
@@ -243,10 +241,7 @@ def health():
 # MODEL INFO
 # ============================================================
 
-@app.get(
-    "/model-info",
-    tags=["Model"]
-)
+@app.get("/model-info", tags=["Model"])
 def model_info():
 
     return {
@@ -262,10 +257,7 @@ def model_info():
 # PREDICTION
 # ============================================================
 
-@app.post(
-    "/predict",
-    tags=["Prediction"]
-)
+@app.post("/predict", tags=["Prediction"])
 def predict(employee: Employee):
 
     if pipeline is None:
@@ -277,23 +269,11 @@ def predict(employee: Employee):
 
     try:
 
-        # ----------------------------------------------------
-        # Pydantic -> DataFrame
-        # ----------------------------------------------------
-
         data = pd.DataFrame([
             employee.model_dump()
         ])
 
-        # ----------------------------------------------------
-        # Feature Engineering
-        # ----------------------------------------------------
-
         data = create_features(data)
-
-        # ----------------------------------------------------
-        # Check features
-        # ----------------------------------------------------
 
         missing_features = [
             feature
@@ -311,21 +291,9 @@ def predict(employee: Employee):
                 }
             )
 
-        # ----------------------------------------------------
-        # Feature order
-        # ----------------------------------------------------
-
         data = data[PIPELINE_FEATURES]
 
-        # ----------------------------------------------------
-        # Prediction
-        # ----------------------------------------------------
-
         prediction = pipeline.predict(data)[0]
-
-        # ----------------------------------------------------
-        # Probability
-        # ----------------------------------------------------
 
         probabilities = pipeline.predict_proba(data)[0]
 
@@ -343,52 +311,30 @@ def predict(employee: Employee):
             probability_map.get(1, 0) * 100
         )
 
-        # ----------------------------------------------------
-        # Label
-        # ----------------------------------------------------
-
-        if int(prediction) == 1:
-
-            label = "Leave"
-
-        else:
-
-            label = "Stay"
-
-        # ----------------------------------------------------
-        # Response
-        # ----------------------------------------------------
+        label = (
+            "Leave"
+            if int(prediction) == 1
+            else "Stay"
+        )
 
         return {
-
             "success": True,
-
             "prediction": int(prediction),
-
             "label": label,
-
             "probabilities": {
-
                 "stay": round(
                     float(stay_probability),
                     2
                 ),
-
                 "leave": round(
                     float(leave_probability),
                     2
                 )
             },
-
             "model": {
-
                 "name": "XGBoost",
-
                 "pipeline": True,
-
-                "features": len(
-                    PIPELINE_FEATURES
-                )
+                "features": len(PIPELINE_FEATURES)
             }
         }
 
