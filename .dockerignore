@@ -1,49 +1,40 @@
-# Python cache 
+# Python
 __pycache__/
-*.pyc
-*.pyo 
-*.pyd 
+*.py[cod]
+*.pyd
 
-# Virtual ENvironment
+# Virtual environments
 .venv/
 venv/
 env/
 
-# Git 
+# Git
 .git/
 .gitignore
 
-# VS Code 
-
+# IDE
 .vscode/
-
-# Py Charm
 .idea/
 
-# Jupyter 
+# Jupyter
 .ipynb_checkpoints/
 *.ipynb
 
 # Logs
-*.log 
+*.log
 
 # Environment
+.env
 
-.env 
-
-# Testing 
+# Testing
 .pytest_cache/
 
-#OS files
-
+# OS
 .DS_Store
 Thumbs.db
 
 # Documentation
-
 README.md
 
-#  Docker 
-
+# Docker
 docker-compose.yml
-
